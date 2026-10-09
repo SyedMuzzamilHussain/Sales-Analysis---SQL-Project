@@ -195,9 +195,23 @@ FROM category_sales
 WHERE total_revenue > 10000
 ORDER BY total_revenue DESC;
 
-
 -- 18. Revenue percentage by city
-WITH product_sales AS (
+WITH city_sales AS (
+    SELECT
+        city,
+        SUM(quantity * unit_price) AS total_revenue
+    FROM sales
+    GROUP BY city
+)
+SELECT
+    city,
+    total_revenue,
+    ROUND(
+        total_revenue * 100.0 / SUM(total_revenue) OVER (),
+        2
+    ) AS revenue_percentage
+FROM city_sales
+ORDER BY total_revenue DESC;
 
 -- 19. Top-revenue product in each city
     SELECT
@@ -215,7 +229,7 @@ SELECT
 FROM product_sales
 ORDER BY revenue_rank;
 
-
+-- 20. Product performance vs average revenue
 WITH product_sales AS (
     SELECT
         product_name,
@@ -235,7 +249,7 @@ SELECT
 FROM product_sales
 ORDER BY total_revenue DESC;
 
-
+-- 21. Revenue percentage by city
 WITH city_sales AS (
     SELECT
         city,
@@ -253,7 +267,7 @@ SELECT
 FROM city_sales
 ORDER BY total_revenue DESC;
 
-
+-- 22. Top-revenue product in each city
 WITH city_product_sales AS (
     SELECT
         city,
